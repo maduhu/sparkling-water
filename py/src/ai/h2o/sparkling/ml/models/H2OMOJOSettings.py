@@ -28,7 +28,8 @@ class H2OMOJOSettings(JavaWrapper):
                  withDetailedPredictionCol=False,
                  convertUnknownCategoricalLevelsToNa=False,
                  convertInvalidNumbersToNa=False,
-                 namedMojoOutputColumns=True):
+                 namedMojoOutputColumns=True,
+                 removeModel=False):
         self._java_obj = None
 
         assert_is_type(predictionCol, str)
@@ -37,12 +38,14 @@ class H2OMOJOSettings(JavaWrapper):
         assert_is_type(convertUnknownCategoricalLevelsToNa, bool)
         assert_is_type(convertInvalidNumbersToNa, bool)
         assert_is_type(namedMojoOutputColumns, bool)
+        assert_is_type(removeModel, bool)
         self.predictionCol = predictionCol
         self.detailedPredictionCol = detailedPredictionCol
         self.withDetailedPredictionCol = withDetailedPredictionCol
         self.convertUnknownCategoricalLevelsToNa = convertUnknownCategoricalLevelsToNa
         self.convertInvalidNumbersToNa = convertInvalidNumbersToNa
         self.namedMojoOutputColumns = namedMojoOutputColumns
+        self.removeModel = removeModel
 
     def toJavaObject(self):
         self._java_obj = self._new_java_obj("ai.h2o.sparkling.ml.models.H2OMOJOSettings",
@@ -51,7 +54,8 @@ class H2OMOJOSettings(JavaWrapper):
                                             self.withDetailedPredictionCol,
                                             self.convertUnknownCategoricalLevelsToNa,
                                             self.convertInvalidNumbersToNa,
-                                            self.namedMojoOutputColumns)
+                                            self.namedMojoOutputColumns,
+                                            self.removeModel)
         return self._java_obj
 
     @staticmethod

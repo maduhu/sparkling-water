@@ -46,7 +46,7 @@ trait H2OMOJOAlgoSharedParams extends Params with Logging {
 
   protected final val namedMojoOutputColumns: Param[Boolean] = new BooleanParam(this, "namedMojoOutputColumns", "Mojo Output is not stored" +
     " in the array but in the properly named columns")
-
+  
   //
   //
   // Default values
