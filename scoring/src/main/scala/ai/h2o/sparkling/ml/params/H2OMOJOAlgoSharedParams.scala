@@ -28,24 +28,40 @@ trait H2OMOJOAlgoSharedParams extends Params with Logging {
   //
   // Param definitions
   //
-  protected final val predictionCol: Param[String] = new Param[String](this, "predictionCol", "Prediction column name")
-  protected final val detailedPredictionCol = new Param[String](this, "detailedPredictionCol",
+  protected final val predictionCol: Param[String] = new Param[String](
+    this,
+    "predictionCol",
+    "Prediction column name")
+
+  protected final val detailedPredictionCol = new Param[String](
+    this,
+    "detailedPredictionCol",
     "Column containing additional prediction details, its content depends on the model type.")
-  protected final val withDetailedPredictionCol = new BooleanParam(this, "withDetailedPredictionCol",
+
+  protected final val withDetailedPredictionCol = new BooleanParam(
+    this,
+    "withDetailedPredictionCol",
     "Enables or disables generating additional prediction column, but with more details")
 
-  protected final val featuresCols: StringArrayParam = new StringArrayParam(this, "featuresCols", "Name of feature columns")
+  protected final val featuresCols: StringArrayParam = new StringArrayParam(
+    this,
+    "featuresCols",
+    "Name of feature columns")
 
-  protected final val convertUnknownCategoricalLevelsToNa = new BooleanParam(this,
+  protected final val convertUnknownCategoricalLevelsToNa = new BooleanParam(
+    this,
     "convertUnknownCategoricalLevelsToNa",
     "If set to 'true', the model converts unknown categorical levels to NA during making predictions.")
 
-  protected final val convertInvalidNumbersToNa = new BooleanParam(this,
+  protected final val convertInvalidNumbersToNa = new BooleanParam(
+    this,
     "convertInvalidNumbersToNa",
     "If set to 'true', the model converts invalid numbers to NA during making predictions.")
 
-  protected final val namedMojoOutputColumns: Param[Boolean] = new BooleanParam(this, "namedMojoOutputColumns", "Mojo Output is not stored" +
-    " in the array but in the properly named columns")
+  protected final val namedMojoOutputColumns: Param[Boolean] = new BooleanParam(
+    this,
+    "namedMojoOutputColumns",
+    "Mojo Output is not stored in the array but in the properly named columns")
   
   //
   //

@@ -26,7 +26,8 @@ case class H2OMOJOSettings(
                             convertUnknownCategoricalLevelsToNa: Boolean = false,
                             convertInvalidNumbersToNa: Boolean = false,
                             namedMojoOutputColumns: Boolean = true,
-                            removeModel: Boolean = false
+                            removeModel: Boolean = false,
+                            expandNamedMojoOutputColumns: Boolean = false
                           )
 
 object H2OMOJOSettings {

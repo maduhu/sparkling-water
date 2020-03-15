@@ -25,7 +25,6 @@ import ai.h2o.sparkling.ml.algos.H2OGBM
 import org.apache.spark.SparkContext
 import org.apache.spark.h2o.H2OContext
 import org.apache.spark.h2o.utils.SparkTestContext
-import org.apache.spark.ml.feature.SQLTransformer
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.functions._
@@ -297,7 +296,7 @@ class H2OMOJOPipelineModelTestSuite extends FunSuite with SparkTestContext {
     testTransformAndTransformSchemaAreAligned(settings)
   }
 
-  test("Test distributed pipeline") {
+    test("Test distributed pipeline") {
     // Test mojo
     // Notes:
     //   - Need to disable stage codegen: 'spark.sql.codegen.wholeStage' = false
@@ -305,7 +304,8 @@ class H2OMOJOPipelineModelTestSuite extends FunSuite with SparkTestContext {
     //   - there is no way how to get output columns from MOJO at this point
     //   - TODO: the MOJO should provide training schema, also scoring schema
     val mojoTransf = H2OMOJOPipelineModel.createFromMojo("/tmp/mojo-pipeline/pipeline.mojo",
-                                                         H2OMOJOSettings(removeModel = true))
+                                                         H2OMOJOSettings(removeModel = true,
+                                                                         expandNamedMojoOutputColumns = true))
 
     val inputScoringSchema = StructType(mojoTransf.getFeaturesCols().map(name => StructField(name, DoubleType, true)))
     val inputTrainingSchema = StructType(inputScoringSchema.fields ++ Array(StructField("default payment next month", IntegerType, true)))
@@ -316,49 +316,33 @@ class H2OMOJOPipelineModelTestSuite extends FunSuite with SparkTestContext {
       .csv("/Users/michal/Devel/projects/h2o/repos/dai/tests/data/creditcard.csv")
     println(f"Training data schema: ${trainingDataset.schema}")
     trainingDataset.show(10)
+    mojoTransf.transform(trainingDataset).printSchema()
+    mojoTransf.transformSchema(trainingDataset.schema).printTreeString()
+    assert(mojoTransf.transform(trainingDataset).schema === mojoTransf.transformSchema(trainingDataset.schema))
 
-    // FIXME: mojoTransf.transforSchema(dataset.schema) != mojoTransf.transf(dataset).schema
-    val predsSchema = mojoTransf.transform(trainingDataset).schema
-    val outputColsNames = predsSchema.apply(mojoTransf.getPredictionCol()) match {
-      case StructField(_, StructType(fields), _, _) => fields.map(_.name)
-    }
-    println(f"Predictions schema: ${predsSchema}")
-
-    // Prepare inputs for model
-    val nameRenamer: (String) => (String) = (name: String) => f"p_${NameHelper.normalize(name)}"
-    val flatSqlPredicates = outputColsNames.map(colName => sqlPredicate(colName, mojoTransf.getPredictionCol(), nameRenamer)) ++ inputTrainingSchema.map(n => f"`${n.name}`")
-    val sqlFlattenizer = new SQLTransformer()
-      .setStatement(f"""SELECT ${flatSqlPredicates.mkString(",")} FROM __THIS__""")
-    println(f"SQL Query: ${sqlFlattenizer.getStatement}")
-    println(f"Predictions schema after SQL: ${sqlFlattenizer.transformSchema(predsSchema)}")
-
-    println(f"Transformation output: ${outputColsNames.mkString(",")}")
-    // materialize the frame to see that it is passing
-    //println(preds.show())
     println("-------------- MOJO ----------")
     println(f"Transformation input: ${mojoTransf.getFeaturesCols().mkString(",")}")
 
-    //println(sqlFlattenizer.transform(mojoTransf.transform(trainingDataset)).show(10))
-
+      // TODO: we need to figure out what were original inputs of model
     val hc = H2OContext.getOrCreate(spark)
     val model = new H2OGBM()
       .setNtrees(100)
       .setLearnRate(0.01)
       .setMaxDepth(4)
       .setLabelCol("default payment next month")
-      .setFeaturesCols(outputColsNames.map(nameRenamer(_)) ++ inputTrainingSchema.map(f => f.name))
+      .setFeaturesCols(mojoTransf.getOutputCols() ++ inputTrainingSchema.map(f => f.name))
+    println("Model feature columns:")
     println(model.getFeaturesCols().mkString("\n"))
 
     val pipeline = new Pipeline("test_x")
-    pipeline.setStages(Array(mojoTransf, sqlFlattenizer, model))
+    pipeline.setStages(Array(mojoTransf, model))
 
     val pipelineModel = pipeline.fit(trainingDataset)
     pipelineModel.write.overwrite().save("/tmp/pipelineModel.xxx")
 
     val loadedPipeline = PipelineModel.load("/tmp/pipelineModel.xxx")
     val ppredictions = loadedPipeline.transform(trainingDataset)
-    ppredictions.printSchema()
-    ppredictions.show(10)
+    ppredictions.select("ID", "prediction").show(10)
   }
 
 
