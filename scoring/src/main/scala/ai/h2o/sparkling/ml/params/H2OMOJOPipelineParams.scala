@@ -16,15 +16,15 @@ trait H2OMOJOPipelineParams extends H2OMOJOAlgoSharedParams {
       "outputCols",
       "Name of output columns produced by the MOJO.")
 
-  protected final val inputSchema: StructTypeParam = new StructTypeParam(
+  protected final val mojoInputSchema: StructTypeParam = new StructTypeParam(
     this,
-       "inputSchema",
-       "Expected input schema by the MOJO model.")
+       "mojoInputSchema",
+       "Expected input schema by the MOJO model (for example, if you need to define data parser).")
 
-  protected final val outputSchema: StructTypeParam = new StructTypeParam(
+  protected final val mojoOutputSchema: StructTypeParam = new StructTypeParam(
     this,
-      "outputSchema",
-      "Exposed output schema by the MOJO model.")
+      "mojoOutputSchema",
+      "Exposed output schema by the MOJO model (this is not prediction schema).")
 
   protected final val expandNamedMojoOutputColumns: BooleanParam = new BooleanParam(
     this,
@@ -44,9 +44,9 @@ trait H2OMOJOPipelineParams extends H2OMOJOAlgoSharedParams {
 
   def getOutputCols(): Array[String] = $(outputCols)
 
-  def getInputSchema(): StructType = $(inputSchema)
+  def getMojoInputSchema(): StructType = $(mojoInputSchema)
 
-  def getOutputSchema(): StructType = $(outputSchema)
+  def getMojoOutputSchema(): StructType = $(mojoOutputSchema)
 
   def getExpandNamedMojoOutputColumns(): Boolean = $(expandNamedMojoOutputColumns)
 }

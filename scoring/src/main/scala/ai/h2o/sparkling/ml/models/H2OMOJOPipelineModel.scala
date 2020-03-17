@@ -195,8 +195,8 @@ object H2OMOJOPipelineModel extends H2OMOJOReadable[H2OMOJOPipelineModel] with H
     // Configure model
     model.set(model.featuresCols, pipeline.getInputMeta.getColumnNames)
     model.set(model.outputCols, pipeline.getOutputMeta.getColumnNames)
-    //model.set(model.inputSchema, toSchema(pipeline.getInputMeta))
-    //model.set(model.outputSchema, toSchema(pipeline.getOutputMeta))
+    model.set(model.mojoInputSchema, toSchema(pipeline.getInputMeta))
+    model.set(model.mojoOutputSchema, toSchema(pipeline.getOutputMeta))
     model.set(model.convertUnknownCategoricalLevelsToNa -> settings.convertUnknownCategoricalLevelsToNa)
     model.set(model.convertInvalidNumbersToNa -> settings.convertInvalidNumbersToNa)
     model.set(model.namedMojoOutputColumns -> settings.namedMojoOutputColumns)
