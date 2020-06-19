@@ -22,7 +22,11 @@ import org.json4s.jackson.JsonMethods.{compact, parse, render}
 import org.json4s.{JNull, JValue}
 import water.AutoBuffer
 
-class StringPairArrayParam(parent: Params, name: String, doc: String, isValid: Array[(String, String)] => Boolean)
+class NullableStringPairArrayParam(
+    parent: Params,
+    name: String,
+    doc: String,
+    isValid: Array[(String, String)] => Boolean)
   extends Param[Array[(String, String)]](parent, name, doc, isValid) {
 
   def this(parent: Params, name: String, doc: String) =

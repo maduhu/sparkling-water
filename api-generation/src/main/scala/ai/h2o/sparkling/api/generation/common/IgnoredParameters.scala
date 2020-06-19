@@ -29,7 +29,6 @@ object IgnoredParameters {
   val unimplemented = Seq(
     "__meta", // just for internal purposes
     "checkpoint", // GBM, DRF, XGBoost, Deep Learning
-    "interaction_pairs", // GLM
     "pretrained_autoencoder") // DeepLearning
 
   def all: Seq[String] = deprecated ++ implementedInParent ++ unimplemented

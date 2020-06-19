@@ -59,10 +59,11 @@ object Runner {
     val plugValues = ExplicitField("plug_values", "HasPlugValues", null)
     val betaConstraints = ExplicitField("beta_constraints", "HasBetaConstraints", null)
     val userPoints = ExplicitField("user_points", "HasUserPoints", null)
+    val interactionPairs = ExplicitField("interaction_pairs", "HasInteractionPairs", null)
     val randomCols = ExplicitField("random_columns", "HasRandomCols", null)
 
     val xgboostFields = Seq(monotonicity, calibrationDataFrame, ignoredCols)
-    val glmFields = Seq(randomCols, ignoredCols, plugValues, betaConstraints)
+    val glmFields = Seq(randomCols, ignoredCols, plugValues, betaConstraints, interactionPairs)
     val gbmFields = Seq(monotonicity, calibrationDataFrame, ignoredCols)
     val kmeansFields = Seq(userPoints, ignoredCols)
 
