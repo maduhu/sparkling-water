@@ -213,7 +213,7 @@ class H2OTypeConverters(object):
         def convert(value):
             if value is None:
                 raise TypeError("None is not allowed.")
-            elif isinstance(value, Tuple) and len(value) == 2:
+            elif isinstance(value, tuple) and len(value) == 2:
                 return (H2OTypeConverters.toString()(value[0])), H2OTypeConverters.toString()(value[1])
             else:
                 raise TypeError("Could not convert %s to pair of strings." % value)
@@ -226,7 +226,7 @@ class H2OTypeConverters(object):
             if value is None:
                 return None
             else:
-                return H2OTypeConverters.toNullableListPairString()(value)
+                return H2OTypeConverters.toListPairString()(value)
 
         return convert
 
