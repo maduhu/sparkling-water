@@ -17,6 +17,8 @@
 
 package ai.h2o.sparkling.ml.params
 
+import hex.StringPair
+
 trait HasInteractionPairs extends H2OAlgoParamsBase {
   private val interactionPairs = new NullableStringPairArrayParam(
     this,
@@ -30,7 +32,14 @@ trait HasInteractionPairs extends H2OAlgoParamsBase {
   def setInteractionPairs(value: Array[(String, String)]): this.type = set(interactionPairs -> value)
 
   override private[sparkling] def getH2OAlgorithmParams(): Map[String, Any] = {
-    super.getH2OAlgorithmParams() ++ Map("interaction_pairs" -> getInteractionPairs().toMap)
+    val interactionPairs = getInteractionPairs()
+    val interactionPairsMap = if (interactionPairs == null) {
+      null
+    } else {
+      interactionPairs.map(pair => new StringPair(pair._1, pair._2).toJsonString)
+    }
+    println(interactionPairsMap)
+    super.getH2OAlgorithmParams() ++ Map("interaction_pairs" -> interactionPairsMap)
   }
 
   override private[sparkling] def getSWtoH2OParamNameMap(): Map[String, String] = {

@@ -24,7 +24,8 @@ class HasInteractionPairs(Params):
     interactionPairs = Param(
         Params._dummy(),
         "interactionPairs",
-        "A list of pairwise (first order) column interactions.")
+        "A list of pairwise (first order) column interactions.",
+        H2OTypeConverters.toNullableListPairString())
 
     def getInteractionPairs(self):
         return self.getOrDefault(self.interactionPairs)
