@@ -70,7 +70,7 @@ def testPropagationOfPredictionCol(prostateDataset):
 
 
 def testInteractionPairsAffectResult(airlinesDataset):
-    [traningDataset, testingDataset] = airlinesDataset.randomSplit([0.9, 0.1], 1)
+    [traningDataset, testingDataset] = airlinesDataset.randomSplit([0.95, 0.05], 1)
     def createInitialGlmDefinition():
         return H2OGLM(
             seed=42,

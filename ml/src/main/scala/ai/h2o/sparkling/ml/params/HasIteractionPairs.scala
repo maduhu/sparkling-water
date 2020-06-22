@@ -36,9 +36,8 @@ trait HasInteractionPairs extends H2OAlgoParamsBase {
     val interactionPairsMap = if (interactionPairs == null) {
       null
     } else {
-      interactionPairs.map(pair => new StringPair(pair._1, pair._2).toJsonString)
+      interactionPairs.map(pair => new StringPair(pair._1, pair._2).toJsonString.replace("_", ""))
     }
-    println(interactionPairsMap)
     super.getH2OAlgorithmParams() ++ Map("interaction_pairs" -> interactionPairsMap)
   }
 
