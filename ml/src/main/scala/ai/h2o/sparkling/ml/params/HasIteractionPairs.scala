@@ -32,13 +32,7 @@ trait HasInteractionPairs extends H2OAlgoParamsBase {
   def setInteractionPairs(value: Array[(String, String)]): this.type = set(interactionPairs -> value)
 
   override private[sparkling] def getH2OAlgorithmParams(): Map[String, Any] = {
-    val interactionPairs = getInteractionPairs()
-    val interactionPairsMap = if (interactionPairs == null) {
-      null
-    } else {
-      interactionPairs.map(pair => new StringPair(pair._1, pair._2).toJsonString.replace("_", ""))
-    }
-    super.getH2OAlgorithmParams() ++ Map("interaction_pairs" -> interactionPairsMap)
+    super.getH2OAlgorithmParams() ++ Map("interaction_pairs" -> getInteractionPairs())
   }
 
   override private[sparkling] def getSWtoH2OParamNameMap(): Map[String, String] = {
