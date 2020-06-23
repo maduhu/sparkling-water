@@ -94,6 +94,10 @@ trait H2OAlgoParamsBase extends Params {
     new NullableStringArrayParam(this, name, doc)
   }
 
+  protected def nullableStringPairArrayParam(name: String, doc: String): NullableStringPairArrayParam = {
+    new NullableStringPairArrayParam(this, name, doc)
+  }
+
   private def convertWithH2OContext[TInput <: AnyRef, TOutput <: AnyRef](input: TInput)(
       body: (SparkSession, H2OContext) => TOutput): TOutput = {
     if (input == null) {
