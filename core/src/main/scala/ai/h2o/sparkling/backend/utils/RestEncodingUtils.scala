@@ -71,7 +71,7 @@ private[sparkling] trait RestEncodingUtils {
       case map: java.util.AbstractMap[_, _] => stringifyMap(map.asScala.toMap)
       case map: Map[_, _] => stringifyMap(map)
       case arr: Array[_] => stringifyArray(arr)
-      case pair: (_, _)  => stringifyPair(pair)
+      case pair: (_, _) => stringifyPair(pair)
       case primitive if isPrimitiveType(primitive) => stringifyPrimitiveParam(primitive)
       case unknown => throw new RuntimeException(s"Unsupported parameter '$unknown' of type ${unknown.getClass}")
     }
